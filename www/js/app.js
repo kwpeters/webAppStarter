@@ -7,7 +7,8 @@
 angular.module(
     'mathGenApp',
     [
-        'ui.router'
+        'ui.router',
+        'homeView'
     ]
 ).config(
     [
@@ -21,13 +22,13 @@ angular.module(
             //delete $httpProvider.defaults.headers.common['X-Requested-With'];
             //$httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
-            $stateProvider.state('home', {
-                url: '/home',
+            $stateProvider.state('homeView', {
+                url: '/homeView',
                 templateUrl: 'js/views/homeView.html',
-                controller: 'HomeViewCtrl'
+                controller: 'homeViewCtrl'
             });
 
-            $urlRouterProvider.otherwise('/home');
+            $urlRouterProvider.otherwise('/homeView');
 
         }
     ]
