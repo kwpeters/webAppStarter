@@ -1,0 +1,11 @@
+# Mac OS X files that are not needed.
+*.DS_Store
+
+# IDE specific Files
+.idea
+
+# Server libraries
+/node_modules/
+
+# Client libraries
+/www/bower_components/
