@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Web App Seed</title>
+
+    <!-- minimal-ui allows to get rid of annoying toolbars on iPhones iOS>7.0 -->
+    <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, minimal-ui">
+
+    <!-- IE should run in the most current mode possible and the Chrome
+         Frame plug-in should be used if present.-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <!-- allows to work in full screen mode for iPhone safari
+        on iOS6, iOS7 after adding to Home Screen-->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- allows to work in full screen mode on Android in Chrome>=31 after adding to Home Screen-->
+    <meta name="mobile-web-app-capable" content="yes">
+
+    <!-- 3rd-party CSS -->
+    <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css"/>
+    <!-- Application CSS -->
+
+</head>
+<body>
+
+    <div ng-app="mathGenApp">
+        <div ui-view></div>
+    </div>
+
+    <!-- 3rd-party scripts -->
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/angular/angular.min.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="bower_components/angular-resource/angular-resource.min.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.min.js"></script>
+    <script src="bower_components/angular-touch/angular-touch.min.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.min.js"></script>
+    <script src="bower_components/angular-local-storage/angular-local-storage.min.js"></script>
+    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <!-- Application JavaScript -->
+    <script src="js/views/homeView.js"></script>
+    <script src="js/app.js"></script>
+
+</body>
+</html>
