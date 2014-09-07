@@ -41,16 +41,16 @@ gulp.task('default', function () {
     "use strict";
 
     function stageServer(buildType) {
-        gulp.src('server/**/*')
-            .pipe(gulp.dest(buildTypeToDistDir(buildType) + '/server'));
+        return gulp.src('server/**/*', {cwdbase: true})
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
     }
 
     gulp.task('stageServer:dev', function () {
-        stageServer(buildTypeEnum.dev);
+        return stageServer(buildTypeEnum.dev);
     });
 
     gulp.task('stageServer:prod', function () {
-        stageServer(buildTypeEnum.prod);
+        return stageServer(buildTypeEnum.prod);
     });
 })();
 
@@ -62,16 +62,16 @@ gulp.task('default', function () {
     "use strict";
 
     function stageBowerFiles(buildType) {
-        gulp.src('www/bower_components/**/*')
-            .pipe(gulp.dest(buildTypeToDistDir(buildType) + '/www/bower_components'));
+        return gulp.src('www/bower_components/**/*', {cwdbase: true})
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
     }
 
     gulp.task('stageBowerFiles:dev', function () {
-        stageBowerFiles(buildTypeEnum.dev);
+        return stageBowerFiles(buildTypeEnum.dev);
     });
 
     gulp.task('stageBowerFiles:prod', function () {
-        stageBowerFiles(buildTypeEnum.prod);
+        return stageBowerFiles(buildTypeEnum.prod);
     });
 })();
 
@@ -85,18 +85,18 @@ gulp.task('default', function () {
     function stageIndex(buildType) {
         var indexFileName = 'www/index-' + buildType + '.html';
 
-        gulp.src(indexFileName)
+        return gulp.src(indexFileName, {cwdbase: true})
             .pipe(rename({basename: 'index'}))
-            .pipe(gulp.dest(buildTypeToDistDir(buildType) + '/www'));
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
 
     }
 
     gulp.task('stageIndex:dev', function () {
-        stageIndex(buildTypeEnum.dev);
+        return stageIndex(buildTypeEnum.dev);
     });
 
     gulp.task('stageIndex:prod', function () {
-        stageIndex(buildTypeEnum.prod);
+        return stageIndex(buildTypeEnum.prod);
     });
 
 })();
@@ -109,28 +109,64 @@ gulp.task('default', function () {
     "use strict";
 
     function stageAppLess(buildType) {
-        gulp.src('www/styles/*.less')
+        return gulp.src('www/styles/*.less', {cwdbase: true})
             .pipe(less({paths: [], relativeUrls: true}))
             .pipe(buildType === buildTypeEnum.prod ? minifyCss() : gutil.noop())
             .pipe(buildType === buildTypeEnum.prod ? rename({suffix: '.min'}) : gutil.noop())
-            .pipe(gulp.dest(buildTypeToDistDir(buildType) + '/www/styles'));
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
     }
 
     gulp.task('stageAppLess:dev', function () {
-        stageAppLess(buildTypeEnum.dev);
+        return stageAppLess(buildTypeEnum.dev);
     });
 
     gulp.task('stageAppLess:prod', function () {
-        stageAppLess(buildTypeEnum.prod);
+        return stageAppLess(buildTypeEnum.prod);
     });
 
 })();
 
-// todo: stage app assets
+//
+// Stage app resources
+//
+(function () {
+    "use strict";
+
+    function stageAppResources(buildType) {
+        var globs = [
+            'www/fonts/**/*',
+            'www/images/**/*'
+        ];
+
+        return gulp.src(globs, {cwdbase: true})
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
+    }
+
+    gulp.task('stageAppResources:dev', function () {
+        return stageAppResources(buildTypeEnum.dev);
+    });
+
+    gulp.task('stageAppResources:prod', function () {
+        return stageAppResources(buildTypeEnum.prod);
+    });
+
+})();
 
 // todo: stage app js (concatenated or not)
 
 
-gulp.task('build:dev', []);
-gulp.task('build:prod', []);
+gulp.task(
+    'build:dev',
+    [
+        'stageServer:dev', 'stageBowerFiles:dev', 'stageIndex:dev',
+        'stageAppLess:dev', 'stageAppResources:dev'
+    ]
+);
+gulp.task(
+    'build:prod',
+    [
+        'stageServer:prod', 'stageBowerFiles:prod', 'stageIndex:prod',
+        'stageAppLess:prod', 'stageAppResources:prod'
+    ]
+);
 gulp.task('build', ['build:dev', 'build:prod']);
