@@ -1,9 +1,11 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
+    bower = require('gulp-bower'),
     rename = require('gulp-rename'),
     less = require('gulp-less'),
     minifyCss = require('gulp-minify-css'),
     uglifyJs = require('gulp-uglifyjs'),
+    rimraf = require('gulp-rimraf'),
     buildTypeEnum = {dev: 'dev', prod: 'prod'};
 
 function buildTypeToDistDir(buildType) {
@@ -22,8 +24,6 @@ function buildTypeToDistDir(buildType) {
 // todo: add running jshint (with coverage)
 
 // todo: add running unit tests
-
-// todo: add clean
 
 
 gulp.task('default', function () {
@@ -63,8 +63,8 @@ gulp.task('default', function () {
     "use strict";
 
     function stageBowerFiles(buildType) {
-        return gulp.src('www/bower_components/**/*', {cwdbase: true})
-            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
+        var bowerDir = buildTypeToDistDir(buildType) + '/www/bower_components'
+        bower(bowerDir);
     }
 
     gulp.task('stageBowerFiles:dev', function () {
@@ -74,6 +74,7 @@ gulp.task('default', function () {
     gulp.task('stageBowerFiles:prod', function () {
         return stageBowerFiles(buildTypeEnum.prod);
     });
+
 })();
 
 
@@ -166,7 +167,7 @@ gulp.task('default', function () {
             'www/js/**/*.js'
         ];
 
-        gulp.src(globs, {cwdbase: true})
+        return gulp.src(globs, {cwdbase: true})
             .pipe(buildType === buildTypeEnum.prod ? uglifyJs('www/js/app.min.js') : gutil.noop())
             .pipe(gulp.dest(buildTypeToDistDir(buildType)));
     }
@@ -195,3 +196,24 @@ gulp.task(
     ]
 );
 gulp.task('build', ['build:dev', 'build:prod']);
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Clean
+////////////////////////////////////////////////////////////////////////////////
+
+(function () {
+    "use strict";
+
+    gulp.task('clean', function () {
+        var globs = [
+            'www/**/*.css',
+            'dist/dev',
+            'dist/prod',
+            'artifacts/*'
+        ];
+
+        return gulp.src(globs, {read: false})
+            .pipe(rimraf());
+    });
+})();

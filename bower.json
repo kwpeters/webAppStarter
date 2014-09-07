@@ -1,10 +1,10 @@
 {
-  "name": "mathGen",
+  "name": "webAppStarter",
   "version": "0.0.0",
   "authors": [
-    "Kevin Peters <kwpeters@ra.rockwell.com>"
+    "Kevin Peters <kwpeters@gmail.com>"
   ],
-  "description": "Generates math problems",
+  "description": "A good starting point",
   "main": "index.html",
   "license": "MIT",
   "private": true,
