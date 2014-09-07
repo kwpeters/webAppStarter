@@ -21,9 +21,9 @@ function buildTypeToDistDir(buildType) {
 
 // todo: add running jshint (with coverage)
 
-// todo: add "build:dev" and "build:prod"
-
 // todo: add running unit tests
+
+// todo: add clean
 
 
 gulp.task('default', function () {
@@ -136,7 +136,9 @@ gulp.task('default', function () {
     function stageAppResources(buildType) {
         var globs = [
             'www/fonts/**/*',
-            'www/images/**/*'
+            'www/images/**/*',
+            'www/js/**/*.html',
+            '!www/js/**/*.tc.html' // Don't include templates that are placed in the template cache
         ];
 
         return gulp.src(globs, {cwdbase: true})
@@ -165,7 +167,7 @@ gulp.task('default', function () {
         ];
 
         gulp.src(globs, {cwdbase: true})
-            .pipe(buildType === buildTypeEnum.prod ? uglifyJs('app.min.js') : gutil.noop())
+            .pipe(buildType === buildTypeEnum.prod ? uglifyJs('www/js/app.min.js') : gutil.noop())
             .pipe(gulp.dest(buildTypeToDistDir(buildType)));
     }
 
@@ -182,14 +184,14 @@ gulp.task(
     'build:dev',
     [
         'stageServer:dev', 'stageBowerFiles:dev', 'stageIndex:dev',
-        'stageAppLess:dev', 'stageAppResources:dev'
+        'stageAppLess:dev', 'stageAppResources:dev', 'stageAppJs:dev'
     ]
 );
 gulp.task(
     'build:prod',
     [
         'stageServer:prod', 'stageBowerFiles:prod', 'stageIndex:prod',
-        'stageAppLess:prod', 'stageAppResources:prod'
+        'stageAppLess:prod', 'stageAppResources:prod', 'stageAppJs:prod'
     ]
 );
 gulp.task('build', ['build:dev', 'build:prod']);

@@ -4,7 +4,7 @@ module.exports = function () {
     var path = require('path'),
         // Application information is stored in the project's package.json file.
         // We are loading that information directly from the file system.
-        packageInfo = require(path.join('..', '..', 'package.json')),
+        packageInfo = require(path.join('..', '..', '..', '..', 'package.json')),
         api = {};
 
     api.getData = function (req, res) {
