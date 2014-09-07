@@ -3,6 +3,7 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     less = require('gulp-less'),
     minifyCss = require('gulp-minify-css'),
+    uglifyJs = require('gulp-uglifyjs'),
     buildTypeEnum = {dev: 'dev', prod: 'prod'};
 
 function buildTypeToDistDir(buildType) {
@@ -152,8 +153,30 @@ gulp.task('default', function () {
 
 })();
 
-// todo: stage app js (concatenated or not)
+//
+// Stage app JavaScript
+//
+(function () {
+    "use strict";
 
+    function stageAppJs(buildType) {
+        var globs = [
+            'www/js/**/*.js'
+        ];
+
+        gulp.src(globs, {cwdbase: true})
+            .pipe(buildType === buildTypeEnum.prod ? uglifyJs('app.min.js') : gutil.noop())
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
+    }
+
+    gulp.task('stageAppJs:dev', function () {
+        return stageAppJs(buildTypeEnum.dev);
+    });
+
+    gulp.task('stageAppJs:prod', function () {
+        return stageAppJs(buildTypeEnum.prod);
+    });
+})();
 
 gulp.task(
     'build:dev',
