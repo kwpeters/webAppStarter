@@ -5,7 +5,7 @@
 /* global angular */
 
 angular.module(
-    'mathGenApp',
+    'appModule',
     [
         'ui.router',
         'homeView'
