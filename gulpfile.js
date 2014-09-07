@@ -102,7 +102,6 @@ gulp.task('default', function () {
 })();
 
 
-// todo: stage app less
 //
 // Stage app Less
 //
@@ -124,6 +123,7 @@ gulp.task('default', function () {
     gulp.task('stageAppLess:prod', function () {
         stageAppLess(buildTypeEnum.prod);
     });
+
 })();
 
 // todo: stage app assets
