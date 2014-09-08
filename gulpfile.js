@@ -63,7 +63,7 @@ gulp.task('default', function () {
     "use strict";
 
     function stageBowerFiles(buildType) {
-        var bowerDir = buildTypeToDistDir(buildType) + '/www/bower_components'
+        var bowerDir = buildTypeToDistDir(buildType) + '/www/bower_components';
         bower(bowerDir);
     }
 
@@ -166,6 +166,8 @@ gulp.task('default', function () {
         var globs = [
             'www/js/**/*.js'
         ];
+
+        // todo: Create sourcemaps for prod builds
 
         return gulp.src(globs, {cwdbase: true})
             .pipe(buildType === buildTypeEnum.prod ? uglifyJs('www/js/app.min.js') : gutil.noop())
