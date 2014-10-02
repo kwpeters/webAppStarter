@@ -1,5 +1,6 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
+    os = require('os'),
     bower = require('gulp-bower'),
     rename = require('gulp-rename'),
     less = require('gulp-less'),
@@ -26,9 +27,37 @@ function buildTypeToDistDir(buildType) {
 // todo: add running unit tests
 
 
-gulp.task('default', function () {
-    // todo: Figure out which task should be the default.
-});
+////////////////////////////////////////////////////////////////////////////////
+// Default Task
+////////////////////////////////////////////////////////////////////////////////
+(function () {
+    "use strict";
+    gulp.task('default', ['usage']);
+})();
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Usage
+////////////////////////////////////////////////////////////////////////////////
+(function () {
+    "use strict";
+
+    gulp.task('usage', function () {
+        var padding = os.EOL + os.EOL,
+            text = [
+                gutil.colors.cyan("gulp build[:dev|prod]"),
+                "    Builds this project (in /dist)",
+                "",
+                gutil.colors.cyan("gulp clean"),
+                "    Deletes build-generated files",
+                "",
+                gutil.colors.cyan("gulp usage"),
+                "    Displays this usage information"
+            ];
+
+        console.log(padding + text.join(os.EOL) + padding);
+    });
+})();
 
 
 ////////////////////////////////////////////////////////////////////////////////
