@@ -1,8 +1,7 @@
 module.exports = function () {
     "use strict";
 
-    var path = require('path'),
-        api = {};
+    var api = {};
 
     api.getData = function (req, res) {
 

@@ -68,10 +68,8 @@ function runServer(portNum) {
     //     next();
     // });
 
-
     // Routes
     app.get('/api/data', api.getData);
-    app.get('/api/appInfo', api.getAppInfo);
 
     // Start the server.
     app.listen(portNum, function () {

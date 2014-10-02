@@ -1,6 +1,7 @@
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     os = require('os'),
+    path = require('path'),
     bower = require('gulp-bower'),
     rename = require('gulp-rename'),
     less = require('gulp-less'),
@@ -33,6 +34,41 @@ function buildTypeToDistDir(buildType) {
 (function () {
     "use strict";
     gulp.task('default', ['usage']);
+})();
+
+
+////////////////////////////////////////////////////////////////////////////////
+// runServer
+////////////////////////////////////////////////////////////////////////////////
+(function () {
+    "use strict";
+
+    var exec = require('child_process').exec;
+
+    function runServer(buildType, cb) {
+        var cmd = 'node server',
+            options = {
+                cwd: path.join(buildTypeToDistDir(buildType), 'server')
+            };
+
+        exec(cmd, options, function (error /*, stdout, stderr*/) {
+
+            if (error) {
+                cb(error);  // Return error.
+            }
+
+            cb();           // The task is now finished.
+        });
+    }
+
+    gulp.task('runServer:dev', function (cb) {
+        runServer(buildTypeEnum.dev, cb);
+    });
+
+    gulp.task('runServer:prod', function (cb) {
+        runServer(buildTypeEnum.prod, cb);
+    });
+
 })();
 
 
