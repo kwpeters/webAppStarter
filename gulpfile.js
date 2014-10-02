@@ -61,11 +61,11 @@ function buildTypeToDistDir(buildType) {
         });
     }
 
-    gulp.task('runServer:dev', function (cb) {
+    gulp.task('runServer:dev', ['build:dev'], function (cb) {
         runServer(buildTypeEnum.dev, cb);
     });
 
-    gulp.task('runServer:prod', function (cb) {
+    gulp.task('runServer:prod', ['build:prod'] , function (cb) {
         runServer(buildTypeEnum.prod, cb);
     });
 
