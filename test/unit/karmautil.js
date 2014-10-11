@@ -135,7 +135,7 @@ module.exports.getDevConfig = function getDevConfig (pathToRoot, pathRootToWww) 
         // Source files, that you want to generate coverage for.  Do not
         // include test files or library files.  These files will be
         // instrumented by Istanbul.
-        '**/www/js**/!(*.spec).js': ['coverage']
+        '**/www/js/**/!(*.spec).js': ['coverage']
     };
 
     //
