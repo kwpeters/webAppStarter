@@ -138,7 +138,7 @@ function buildTypeToDistDir(buildType) {
 
     function stageBowerFiles(buildType) {
         var bowerDir = buildTypeToDistDir(buildType) + '/www/bower_components';
-        bower(bowerDir);
+        return bower(bowerDir);
     }
 
     gulp.task('stageBowerFiles:dev', function () {
