@@ -8,6 +8,8 @@ var gulp = require('gulp'),
     minifyCss = require('gulp-minify-css'),
     uglifyJs = require('gulp-uglifyjs'),
     rimraf = require('gulp-rimraf'),
+    karma = require('karma').server,
+    karmaUtil = require('./test/unit/karmautil'),
     buildTypeEnum = {dev: 'dev', prod: 'prod'};
 
 function buildTypeToDistDir(buildType) {
@@ -83,6 +85,13 @@ function buildTypeToDistDir(buildType) {
             text = [
                 gutil.colors.cyan("gulp build[:dev|prod]"),
                 "    Builds this project (in /dist)",
+                "",
+                gutil.colors.cyan("gulp test:dev"),
+                "    Runs the Karma/Jasmine unit tests",
+                "",
+                gutil.colors.cyan("gulp runServer:dev"),
+                gutil.colors.cyan("gulp runServer:prod"),
+                "    Runs the Node.js/Express web server",
                 "",
                 gutil.colors.cyan("gulp clean"),
                 "    Deletes build-generated files",
@@ -229,13 +238,16 @@ function buildTypeToDistDir(buildType) {
 
     function stageAppJs(buildType) {
         var globs = [
-            'www/js/**/*.js'
+            'www/js/**/*.js',
+            '!www/js/**/*.spec.js'
         ];
 
-        // todo: Create sourcemaps for prod builds
+        // todo: Create sourcemaps for prod builds and copy the original sources
 
         return gulp.src(globs, {cwdbase: true})
-            .pipe(buildType === buildTypeEnum.prod ? uglifyJs('www/js/app.min.js') : gutil.noop())
+            .pipe(buildType === buildTypeEnum.prod ?
+                uglifyJs('www/js/app.min.js', {outSourceMap: true}) :
+                gutil.noop())
             .pipe(gulp.dest(buildTypeToDistDir(buildType)));
     }
 
@@ -287,6 +299,7 @@ function buildTypeToDistDir(buildType) {
     gulp.task('clean', function () {
         var globs = [
             'www/**/*.css',
+            'www/bower_components',
             'dist',
             'artifacts/*'
         ];
@@ -295,3 +308,20 @@ function buildTypeToDistDir(buildType) {
             .pipe(rimraf());
     });
 })();
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Unit Tests - Karma
+////////////////////////////////////////////////////////////////////////////////
+
+// A Gulp plugin is not really needed to run Karma.  For now, we will just
+// invoke the shell command to run Karma.  In the future, if more flexibility
+// is needed, we can start running Karma using the Karma API as shown here:
+// https://github.com/karma-runner/gulp-karma
+
+gulp.task('test:dev', ['build:dev'], function (cb) {
+    "use strict";
+
+    var karmaConfig = karmaUtil.getDevConfig('./', 'dist/dev/www');
+    karma.start(karmaConfig, cb);
+});

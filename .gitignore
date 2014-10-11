@@ -7,6 +7,9 @@
 # Server libraries
 /node_modules/
 
+# Front end libraries
+www/bower_components
+
 # Client libraries
 /www/bower_components/
 

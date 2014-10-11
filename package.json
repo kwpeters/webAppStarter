@@ -1,9 +1,10 @@
 {
-  "name": "mathGen",
+  "name": "MyApp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "",
+    "postinstall": "bower install"
   },
   "dependencies": {
     "express": "~3.3.4",
@@ -17,6 +18,12 @@
     "gulp-rename": "^1.2.0",
     "gulp-rimraf": "^0.1.0",
     "gulp-uglifyjs": "^0.4.2",
-    "gulp-util": "^3.0.1"
+    "gulp-util": "^3.0.1",
+    "karma": "^0.12.24",
+    "karma-chrome-launcher": "^0.1.5",
+    "karma-coverage": "^0.2.6",
+    "karma-jasmine": "^0.1.5",
+    "karma-junit-reporter": "^0.2.2",
+    "karma-spec-reporter": "0.0.13"
   }
 }
