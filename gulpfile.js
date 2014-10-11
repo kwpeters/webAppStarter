@@ -29,7 +29,7 @@ function buildTypeToDistDir(buildType) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// Default Task
+// Default Task - Usage
 ////////////////////////////////////////////////////////////////////////////////
 (function () {
     "use strict";
@@ -248,21 +248,33 @@ function buildTypeToDistDir(buildType) {
     });
 })();
 
-gulp.task(
-    'build:dev',
-    [
-        'stageServer:dev', 'stageBowerFiles:dev', 'stageIndex:dev',
-        'stageAppLess:dev', 'stageAppResources:dev', 'stageAppJs:dev'
-    ]
-);
-gulp.task(
-    'build:prod',
-    [
-        'stageServer:prod', 'stageBowerFiles:prod', 'stageIndex:prod',
-        'stageAppLess:prod', 'stageAppResources:prod', 'stageAppJs:prod'
-    ]
-);
-gulp.task('build', ['build:dev', 'build:prod']);
+
+//
+// Build tasks
+//
+(function () {
+
+    "use strict";
+
+    gulp.task(
+        'build:dev',
+        [
+            'stageServer:dev', 'stageBowerFiles:dev', 'stageIndex:dev',
+            'stageAppLess:dev', 'stageAppResources:dev', 'stageAppJs:dev'
+        ]
+    );
+
+    gulp.task(
+        'build:prod',
+        [
+            'stageServer:prod', 'stageBowerFiles:prod', 'stageIndex:prod',
+            'stageAppLess:prod', 'stageAppResources:prod', 'stageAppJs:prod'
+        ]
+    );
+
+    gulp.task('build', ['build:dev', 'build:prod']);
+
+})();
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -275,8 +287,7 @@ gulp.task('build', ['build:dev', 'build:prod']);
     gulp.task('clean', function () {
         var globs = [
             'www/**/*.css',
-            'dist/dev',
-            'dist/prod',
+            'dist',
             'artifacts/*'
         ];
 
