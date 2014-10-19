@@ -1,3 +1,6 @@
+/* global require */
+/* global console */
+
 var gulp = require('gulp'),
     gutil = require('gulp-util'),
     os = require('os'),
@@ -40,6 +43,41 @@ function buildTypeToDistDir(buildType) {
 
 
 ////////////////////////////////////////////////////////////////////////////////
+// Usage
+////////////////////////////////////////////////////////////////////////////////
+(function () {
+    "use strict";
+
+    gulp.task('usage', function () {
+        var padding = os.EOL + os.EOL,
+            text = [
+                gutil.colors.cyan("gulp build[:dev|prod]"),
+                "    Builds this project (in /dist)",
+                "",
+                gutil.colors.cyan("gulp test:dev"),
+                "    Runs the Karma/Jasmine unit tests",
+                "",
+                gutil.colors.cyan("gulp runServer:dev"),
+                gutil.colors.cyan("gulp runServer:prod"),
+                "    Runs the Node.js/Express web server",
+                "",
+                gutil.colors.cyan("gulp clean"),
+                "    Deletes build-generated files",
+                "",
+                gutil.colors.cyan("gulp usage"),
+                "    Displays this usage information",
+                "",
+                gutil.colors.cyan("gulp watch"),
+                "    Watches for source file changes.  When seen, builds dev",
+                "    configuration and runs unit tests"
+            ];
+
+        console.log(padding + text.join(os.EOL) + padding);
+    });
+})();
+
+
+////////////////////////////////////////////////////////////////////////////////
 // runServer
 ////////////////////////////////////////////////////////////////////////////////
 (function () {
@@ -71,37 +109,6 @@ function buildTypeToDistDir(buildType) {
         runServer(buildTypeEnum.prod, cb);
     });
 
-})();
-
-
-////////////////////////////////////////////////////////////////////////////////
-// Usage
-////////////////////////////////////////////////////////////////////////////////
-(function () {
-    "use strict";
-
-    gulp.task('usage', function () {
-        var padding = os.EOL + os.EOL,
-            text = [
-                gutil.colors.cyan("gulp build[:dev|prod]"),
-                "    Builds this project (in /dist)",
-                "",
-                gutil.colors.cyan("gulp test:dev"),
-                "    Runs the Karma/Jasmine unit tests",
-                "",
-                gutil.colors.cyan("gulp runServer:dev"),
-                gutil.colors.cyan("gulp runServer:prod"),
-                "    Runs the Node.js/Express web server",
-                "",
-                gutil.colors.cyan("gulp clean"),
-                "    Deletes build-generated files",
-                "",
-                gutil.colors.cyan("gulp usage"),
-                "    Displays this usage information"
-            ];
-
-        console.log(padding + text.join(os.EOL) + padding);
-    });
 })();
 
 
@@ -324,4 +331,27 @@ gulp.task('test:dev', ['build:dev'], function (cb) {
 
     var karmaConfig = karmaUtil.getDevConfig('./', 'dist/dev/www');
     karma.start(karmaConfig, cb);
+});
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Watchers
+////////////////////////////////////////////////////////////////////////////////
+
+gulp.task('watch', function (cb) {
+    "use strict";
+
+    var globs = [
+            'www/js/**/*.js',
+            'www/styles/*.less',
+            'www/js/**/*.less',
+            'www/**/*.html'
+        ],
+        tasks = ['test:dev'],
+        watcher = gulp.watch(globs, tasks);
+
+    watcher.on('change', function (event) {
+        gutil.log('File ' + event.path + ' was ' + event.type + '.  Rebuilding...');
+    });
+
 });
