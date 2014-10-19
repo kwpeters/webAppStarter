@@ -73,7 +73,7 @@ function getBaseConfig(pathToRoot, pathRootToWww) {
     // - Safari (only Mac)
     // - PhantomJS
     // - IE (only Windows)
-    baseConfig.browsers = ['Chrome'];
+    baseConfig.browsers = ['PhantomJS'];
 
     // If browser does not capture in given timeout [ms], kill it
     baseConfig.captureTimeout = 60000;
@@ -90,7 +90,7 @@ function getBaseConfig(pathToRoot, pathRootToWww) {
         require('karma-jasmine'),
         require('karma-coverage'),
         require('karma-chrome-launcher'),
-        //require('karma-phantomjs-launcher'),
+        require('karma-phantomjs-launcher'),
         //require('karma-firefox-launcher'),
         require('karma-spec-reporter'),
         require('karma-junit-reporter')
