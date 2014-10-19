@@ -351,6 +351,8 @@ gulp.task('watch', function (cb) {
         watcher = gulp.watch(globs, tasks);
 
     watcher.on('change', function (event) {
+        gutil.log('');
+        gutil.log('================================================================================');
         gutil.log('File ' + event.path + ' was ' + event.type + '.  Rebuilding...');
     });
 
