@@ -11,6 +11,7 @@ var gulp = require('gulp'),
     minifyCss = require('gulp-minify-css'),
     uglifyJs = require('gulp-uglifyjs'),
     rimraf = require('gulp-rimraf'),
+    autoprefixer = require('gulp-autoprefixer'),
     karma = require('karma').server,
     karmaUtil = require('./test/unit/karmautil'),
     buildTypeEnum = {dev: 'dev', prod: 'prod'};
@@ -191,9 +192,12 @@ function buildTypeToDistDir(buildType) {
 (function () {
     "use strict";
 
+    var rootLessFile = 'www/styles/app.less';
+
     function stageAppLess(buildType) {
-        return gulp.src('www/styles/*.less', {cwdbase: true})
+        return gulp.src(rootLessFile, {cwdbase: true})
             .pipe(less({paths: [], relativeUrls: true}))
+            .pipe(autoprefixer({browsers: ['last 2 versions'], cascade:false}))
             .pipe(buildType === buildTypeEnum.prod ? minifyCss() : gutil.noop())
             .pipe(buildType === buildTypeEnum.prod ? rename({suffix: '.min'}) : gutil.noop())
             .pipe(gulp.dest(buildTypeToDistDir(buildType)));
@@ -247,15 +251,25 @@ function buildTypeToDistDir(buildType) {
         var globs = [
             'www/js/**/*.js',
             '!www/js/**/*.spec.js'
-        ];
+        ],
+            outputDir;
 
-        // todo: Create sourcemaps for prod builds and copy the original sources
+        // If doing a debug build, the output will be in the appropriate dist
+        // dir as usual.  If we are doing a prod build, we need to specify the
+        // entire output directory to trick uglifyJS into placing the map file
+        // in the appropriate directory and generating the correct final comment
+        // in the JS file.
+        outputDir = buildType === buildTypeEnum.dev ?
+            buildTypeToDistDir(buildType) :
+            buildTypeToDistDir(buildType) + '/www/js';
+
+        // todo: Copy original source files so the sourcemaps work.
 
         return gulp.src(globs, {cwdbase: true})
             .pipe(buildType === buildTypeEnum.prod ?
-                uglifyJs('www/js/app.min.js', {outSourceMap: true}) :
+                uglifyJs('app.min.js', {outSourceMap: true}) :
                 gutil.noop())
-            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
+            .pipe(gulp.dest(outputDir));
     }
 
     gulp.task('stageAppJs:dev', function () {

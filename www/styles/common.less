@@ -1,0 +1,81 @@
+/*
+ * Note:  Autoprefixer must be run on this file to ensure proper operation
+ *        across all platforms.
+ */
+
+
+/*******************************************************************************
+ * General layout
+ */
+
+/*
+ * For elements that must fill the entire height and width of their closest
+ * positioned parent element.
+ */
+.fill-parent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+
+/*******************************************************************************
+ * Flexbox
+ */
+
+.flex-column {
+  display: flex;
+  flex-flow: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-flow: row;
+  justify-content: space-between;
+}
+
+/*
+ * For items in a flexbox layout that should grow and shrink.
+ * Note: Even though shrinking items is generally not supported, the flex-shrink
+ *       property below is set to 1, because it causes scrollbars (applied using
+ *       .scroll-x and .scroll-y) to be placed in the wrong location.
+ */
+.flex-item-expanding {
+  flex: 1 1 auto;
+}
+
+/*
+ * For items in a flexbox layout that should always be their default size.
+ * They will not grow or shrink.
+ */
+.flex-item-static {
+  flex: 0 0 auto;
+}
+
+
+/*******************************************************************************
+ * Scrolling
+ */
+
+.scroll-y {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.scroll-x {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+
+.scroll-xy {
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+
+}
