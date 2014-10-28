@@ -8,7 +8,7 @@ angular.module(
     'appModule',
     [
         'ui.router',
-        'homeView'
+        'homeViewModule',
     ]
 ).config(
     [
@@ -22,11 +22,14 @@ angular.module(
             //delete $httpProvider.defaults.headers.common['X-Requested-With'];
             //$httpProvider.defaults.headers.post["Content-Type"] = "application/x-www-form-urlencoded";
 
-            $stateProvider.state('homeView', {
-                url: '/homeView',
-                templateUrl: 'js/views/homeView.html',
-                controller: 'homeViewCtrl'
-            });
+            $stateProvider.state(
+                'homeView',
+                {
+                    url: '/homeView',
+                    templateUrl: 'js/views/homeView.html',
+                    controller: 'homeViewCtrl'
+                }
+            );
 
             $urlRouterProvider.otherwise('/homeView');
 

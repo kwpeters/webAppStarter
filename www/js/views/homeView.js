@@ -1,6 +1,6 @@
 /* global angular */
 
-angular.module('homeView', [])
+angular.module('homeViewModule', [])
     .controller(
     'homeViewCtrl',
     [

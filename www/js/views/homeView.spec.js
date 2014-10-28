@@ -9,7 +9,7 @@ describe('homeViewCtrl', function () {
 
     var scope, ctrl;
 
-    beforeEach(module('homeView'));
+    beforeEach(module('homeViewModule'));
 
     beforeEach(inject(function ($controller, $rootScope) {
         scope = $rootScope.$new();
