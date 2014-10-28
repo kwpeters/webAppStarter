@@ -95,10 +95,10 @@ function buildTypeToDistDir(buildType) {
         exec(cmd, options, function (error /*, stdout, stderr*/) {
 
             if (error) {
-                cb(error);  // Return error.
+                cb(error);  // The task finished with an error.
+            } else {
+                cb();       // The task is now finished.
             }
-
-            cb();           // The task is now finished.
         });
     }
 
@@ -106,7 +106,7 @@ function buildTypeToDistDir(buildType) {
         runServer(buildTypeEnum.dev, cb);
     });
 
-    gulp.task('runServer:prod', ['build:prod'] , function (cb) {
+    gulp.task('runServer:prod', ['build:prod'], function (cb) {
         runServer(buildTypeEnum.prod, cb);
     });
 
@@ -292,16 +292,24 @@ function buildTypeToDistDir(buildType) {
     gulp.task(
         'build:dev',
         [
-            'stageServer:dev', 'stageBowerFiles:dev', 'stageIndex:dev',
-            'stageAppLess:dev', 'stageAppResources:dev', 'stageAppJs:dev'
+            'stageServer:dev',
+            'stageBowerFiles:dev',
+            'stageIndex:dev',
+            'stageAppLess:dev',
+            'stageAppResources:dev',
+            'stageAppJs:dev'
         ]
     );
 
     gulp.task(
         'build:prod',
         [
-            'stageServer:prod', 'stageBowerFiles:prod', 'stageIndex:prod',
-            'stageAppLess:prod', 'stageAppResources:prod', 'stageAppJs:prod'
+            'stageServer:prod',
+            'stageBowerFiles:prod',
+            'stageIndex:prod',
+            'stageAppLess:prod',
+            'stageAppResources:prod',
+            'stageAppJs:prod'
         ]
     );
 
