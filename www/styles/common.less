@@ -47,6 +47,30 @@
   flex: 0 0 auto;
 }
 
+/*
+ * For elements that must fill the entire height and width of their closest
+ * positioned parent element.
+ */
+.fill-parent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+/*
+ * For elements that must fill the entire viewport.
+ */
+.fill-viewport {
+  position: fixed;
+  display: flex;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
 
 /*******************************************************************************
  * Scrolling
