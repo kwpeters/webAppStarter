@@ -13,40 +13,6 @@
  */
 
 
-/*******************************************************************************
- * Flexbox
- */
-
-.flex-column {
-  display: flex;
-  flex-direction: column;
-}
-
-.flex-row {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-/*
- * For items in a flexbox layout that should grow and shrink.
- * Note: Even though shrinking items is generally not supported, the flex-shrink
- *       property below is set to 1, because it causes scrollbars (applied using
- *       .scroll-x, .scroll-y and .scroll-xy) to be placed in the wrong
- *       location.
- */
-.flex-item-expanding {
-  flex: 1 1 auto;
-}
-
-/*
- * For items in a flexbox layout that should always be their default size.
- * They will not grow or shrink.
- */
-.flex-item-static {
-  flex: 0 0 auto;
-}
-
 /*
  * For elements that must fill the entire height and width of their closest
  * positioned parent element.
@@ -69,6 +35,49 @@
   left: 0;
   right: 0;
   bottom: 0;
+}
+
+
+/*******************************************************************************
+ * Flexbox
+ */
+
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-row {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/*
+ * Used to center items within the container instead of the default stretch
+ * behavior.
+ */
+.center-items {
+  align-items: center;
+}
+
+/*
+ * For items in a flexbox layout that should grow and shrink.
+ * Note: Even though shrinking items is generally not supported, the flex-shrink
+ *       property below is set to 1, because it causes scrollbars (applied using
+ *       .scroll-x, .scroll-y and .scroll-xy) to be placed in the wrong
+ *       location.
+ */
+.flex-item-expanding {
+  flex: 1 1 auto;
+}
+
+/*
+ * For items in a flexbox layout that should always be their default size.
+ * They will not grow or shrink.
+ */
+.flex-item-static {
+  flex: 0 0 auto;
 }
 
 
