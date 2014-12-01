@@ -8,7 +8,7 @@ angular.module(
     'appModule',
     [
         'ui.router',
-        'homeViewModule',
+        'homeViewModule'
     ]
 ).config(
     [
