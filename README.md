@@ -20,6 +20,7 @@ This project contains the following:
 
 ```
 npm install -g karma-cli
+npm install -g bower
 ```
 
 3.  Install Node.js local packages and Bower packages.
