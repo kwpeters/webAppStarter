@@ -17,7 +17,7 @@ describe('homeViewCtrl', function () {
         ctrl = $controller('homeViewCtrl', {$scope: scope});
     }));
 
-    it('should have a msg property', function () {
+    it('should exist', function () {
         expect(ctrl).toBeDefined();
     });
 
