@@ -10,6 +10,7 @@ describe('homeViewCtrl', function () {
     var scope, ctrl;
 
     beforeEach(module('homeViewModule'));
+    beforeEach(module('socket-io'));
 
     beforeEach(inject(function ($controller, $rootScope) {
         scope = $rootScope.$new();
@@ -22,6 +23,6 @@ describe('homeViewCtrl', function () {
 
     it('should add a msg property to scope', function () {
         expect(scope.msg).toBeDefined();
-        expect(scope.msg).toEqual('Hello world');
+        expect(scope.msg).toEqual('');
     });
 });

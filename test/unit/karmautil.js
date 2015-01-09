@@ -41,6 +41,8 @@ function getBaseConfig(pathToRoot, pathRootToWww) {
         'bower_components/angular-animate/angular-animate.min.js',
         'bower_components/angular-local-storage/angular-local-storage.min.js',
         'bower_components/bootstrap/dist/js/bootstrap.min.js',
+        'bower_components/angular-socket-io/mock/socket-io.js',
+        'bower_components/ng-socket-io/ng-socket-io.min.js',
 
         // 3rd party CSS
         'bower_components/bootstrap/dist/css/bootstrap.min.css'

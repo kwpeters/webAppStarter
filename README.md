@@ -14,17 +14,16 @@ This project contains the following:
 
 ## Setup
 
-1.  Install Node.js.
+1.  Install [Node.js](http://nodejs.org/). This will require a **system restart**.
 
 2.  Install required Node.js global packages.
 
-```
-npm install -g karma-cli
-npm install -g bower
-```
+    ```
+    npm install -g karma-cli
+    ```
 
 3.  Install Node.js local packages and Bower packages.
 
-```
-npm install
-```
+    ```
+    npm install
+    ```

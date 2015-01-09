@@ -30,8 +30,9 @@ function printUsage() {
 function runServer(portNum) {
 
     var express = require('express'),
-        api,
-        app = module.exports = express();
+        app = module.exports = express(),
+        server = require('http').createServer(app),
+        io = require('socket.io').listen(server);
 
     // Configure the Node.js application to handle the static files and
     // configure the Express router.
@@ -57,8 +58,8 @@ function runServer(portNum) {
         app.use(express.errorHandler());
     });
 
-    // Load the api module so requests can be routed.
-    api = require('./routes/api')();
+    // Load the socket and api modules so requests can be routed.
+    require('./routes/socket')(io, require('./routes/api')());
 
     // Enable CORS (Cross-Origin Resource Sharing)
     // app.all('/*', function (req, res, next) {
@@ -68,11 +69,8 @@ function runServer(portNum) {
     //     next();
     // });
 
-    // Routes
-    app.get('/api/data', api.getData);
-
     // Start the server.
-    app.listen(portNum, function () {
+    server.listen(portNum, function () {
         "use strict";
         console.log("Express server listening on port %d in %s mode.",
             this.address().port, app.settings.env);
