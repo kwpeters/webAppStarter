@@ -3,10 +3,12 @@ module.exports = function () {
 
     var api = {};
 
-    api.getData = function (req, res) {
+    api.getData = function () {
+        return {data: [1, 2, 3]};
+    };
 
-        var data = {data: [1, 2, 3]};
-        res.send(data);
+    api.message = function() {
+        return "Hello World!";
     };
 
     return api;

@@ -5,9 +5,16 @@ angular.module('homeViewModule', [])
     'homeViewCtrl',
     [
         '$scope',
-        function ($scope) {
+        'socket',
+        function ($scope, socket) {
             'use strict';
-            $scope.msg = 'Hello world';
+
+            $scope.msg = "";
+
+            socket.emit('get message');
+            socket.on('message', function(msg) {
+                $scope.msg = msg;
+            });
         }
     ]
 );
