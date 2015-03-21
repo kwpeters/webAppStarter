@@ -3,8 +3,6 @@ To Do:
     - Add server-side unit tests
     - Update version of AngularJS
     - Update version of Express
-    - Add gulp-angular-templatecache
     - Build index.html
     - Don't use globbing patterns in karma configuration, because order matters.
-    - Remove livereload from gulpfile.js
     - Remove rimraf from gulpfile.js
