@@ -5,10 +5,12 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
     os = require('os'),
     path = require('path'),
+    projectConfig = require('./projectConfig'),
     bower = require('gulp-bower'),
     rename = require('gulp-rename'),
     less = require('gulp-less'),
     minifyCss = require('gulp-minify-css'),
+    templateCache = require('gulp-angular-templatecache'),
     uglifyJs = require('gulp-uglifyjs'),
     rimraf = require('gulp-rimraf'),
     autoprefixer = require('gulp-autoprefixer'),
@@ -243,6 +245,39 @@ function buildTypeToDistDir(buildType) {
     gulp.task('stageAppResources:prod', function () {
         return stageAppResources(buildTypeEnum.prod);
     });
+
+})();
+
+//
+// Template cache
+//
+(function () {
+    "use strict";
+
+    function buildTemplateCache(buildType) {
+
+        var outputDir = path.join(buildTypeToDistDir(buildType), 'www', 'js');
+
+        return gulp.src('www/js/**/*.tc.html')
+            .pipe(templateCache(
+                projectConfig.templateCache.jsFile,
+                {
+                    root: 'js',
+                    module: projectConfig.templateCache.module,
+                    standalone: true
+                }
+            ))
+            .pipe(gulp.dest(outputDir));
+    }
+
+    gulp.task('buildTemplateCache:dev', function () {
+        return buildTemplateCache(buildTypeEnum.dev);
+    });
+
+    gulp.task('buildTemplateCache:prod', function () {
+        return buildTemplateCache(buildTypeEnum.prod);
+    });
+
 
 })();
 

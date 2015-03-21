@@ -8,6 +8,7 @@ angular.module(
     'appModule',
     [
         'ui.router',
+        'templateCacheModule',
         'homeViewModule'
     ]
 ).config(
@@ -26,7 +27,7 @@ angular.module(
                 'homeView',
                 {
                     url: '/homeView',
-                    templateUrl: 'js/views/homeView.html',
+                    templateUrl: 'js/views/homeView.tc.html',
                     controller: 'homeViewCtrl'
                 }
             );
