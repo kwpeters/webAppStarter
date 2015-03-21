@@ -338,6 +338,7 @@ function buildTypeToDistDir(buildType) {
             'stageIndex:dev',
             'stageAppLess:dev',
             'stageAppResources:dev',
+            'buildTemplateCache:dev',
             'stageAppJs:dev'
         ]
     );
@@ -350,6 +351,7 @@ function buildTypeToDistDir(buildType) {
             'stageIndex:prod',
             'stageAppLess:prod',
             'stageAppResources:prod',
+            'buildTemplateCache:prod',
             'stageAppJs:prod'
         ]
     );
