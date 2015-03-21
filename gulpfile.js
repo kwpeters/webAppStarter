@@ -12,6 +12,7 @@ var gulp = require('gulp'),
     uglifyJs = require('gulp-uglifyjs'),
     rimraf = require('gulp-rimraf'),
     autoprefixer = require('gulp-autoprefixer'),
+    livereload = require('gulp-livereload'),
     karma = require('karma').server,
     karmaUtil = require('./test/unit/karmautil'),
     buildTypeEnum = {dev: 'dev', prod: 'prod'};
@@ -125,7 +126,8 @@ function buildTypeToDistDir(buildType) {
 
     function stageServer(buildType) {
         return gulp.src('server/**/*', {cwdbase: true})
-            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)))
+            .pipe(livereload());
     }
 
     gulp.task('stageServer:dev', function () {
@@ -171,7 +173,8 @@ function buildTypeToDistDir(buildType) {
 
         return gulp.src(indexFileName, {cwdbase: true})
             .pipe(rename({basename: 'index'}))
-            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)))
+            .pipe(livereload());
 
     }
 
@@ -200,7 +203,8 @@ function buildTypeToDistDir(buildType) {
             .pipe(autoprefixer({browsers: ['last 2 versions'], cascade:false}))
             .pipe(buildType === buildTypeEnum.prod ? minifyCss() : gutil.noop())
             .pipe(buildType === buildTypeEnum.prod ? rename({suffix: '.min'}) : gutil.noop())
-            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)))
+            .pipe(livereload());
     }
 
     gulp.task('stageAppLess:dev', function () {
@@ -228,7 +232,8 @@ function buildTypeToDistDir(buildType) {
         ];
 
         return gulp.src(globs, {cwdbase: true})
-            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)))
+            .pipe(livereload());
     }
 
     gulp.task('stageAppResources:dev', function () {
@@ -269,7 +274,8 @@ function buildTypeToDistDir(buildType) {
             .pipe(buildType === buildTypeEnum.prod ?
                 uglifyJs('app.min.js', {outSourceMap: true}) :
                 gutil.noop())
-            .pipe(gulp.dest(outputDir));
+            .pipe(gulp.dest(outputDir))
+            .pipe(livereload());
     }
 
     gulp.task('stageAppJs:dev', function () {
@@ -370,7 +376,10 @@ gulp.task('watch', function (cb) {
             'www/**/*.html'
         ],
         tasks = ['test:dev'],
-        watcher = gulp.watch(globs, tasks);
+        watcher;
+
+    livereload.listen();
+    watcher = gulp.watch(globs, tasks);
 
     watcher.on('change', function (event) {
         gutil.log('');
