@@ -54,11 +54,19 @@
 }
 
 /*
- * Used to center items within the container instead of the default stretch
+ * Used to center items along the container's cross axis instead of the default stretch
  * behavior.
  */
 .center-items {
   align-items: center;
+}
+
+/*
+ * Used to align the text baselines of items in a container instead of the default stretch
+ * behavior.
+ */
+.baseline-items {
+  align-items: baseline;
 }
 
 /*
@@ -79,6 +87,24 @@
 .flex-item-static {
   flex: 0 0 auto;
 }
+
+
+/*
+ * Flexbox fix for Firefox (and any other browser supporting the latest
+ * flexbox specification)
+ *
+ * For more information, see:
+ *   - https://bugzilla.mozilla.org/show_bug.cgi?id=1135332
+ *   - https://stackoverflow.com/questions/28636832/firefox-overflow-y-not-working-with-nested-flexbox/28639686#28639686
+ *
+ */
+.flex-item-expanding,
+.flex-item-static
+{
+  min-height: 0;
+  min-width:  0;
+}
+
 
 
 /*******************************************************************************
