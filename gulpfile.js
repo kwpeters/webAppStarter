@@ -5,14 +5,16 @@ var gulp = require('gulp'),
     gutil = require('gulp-util'),
     os = require('os'),
     path = require('path'),
+    projectConfig = require('./projectConfig'),
+    mergeStream = require('merge-stream'),
     bower = require('gulp-bower'),
     rename = require('gulp-rename'),
     less = require('gulp-less'),
     minifyCss = require('gulp-minify-css'),
+    templateCache = require('gulp-angular-templatecache'),
     uglifyJs = require('gulp-uglifyjs'),
     rimraf = require('gulp-rimraf'),
     autoprefixer = require('gulp-autoprefixer'),
-    livereload = require('gulp-livereload'),
     karma = require('karma').server,
     karmaUtil = require('./test/unit/karmautil'),
     buildTypeEnum = {dev: 'dev', prod: 'prod'};
@@ -126,8 +128,7 @@ function buildTypeToDistDir(buildType) {
 
     function stageServer(buildType) {
         return gulp.src('server/**/*', {cwdbase: true})
-            .pipe(gulp.dest(buildTypeToDistDir(buildType)))
-            .pipe(livereload());
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
     }
 
     gulp.task('stageServer:dev', function () {
@@ -173,8 +174,7 @@ function buildTypeToDistDir(buildType) {
 
         return gulp.src(indexFileName, {cwdbase: true})
             .pipe(rename({basename: 'index'}))
-            .pipe(gulp.dest(buildTypeToDistDir(buildType)))
-            .pipe(livereload());
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
 
     }
 
@@ -203,8 +203,7 @@ function buildTypeToDistDir(buildType) {
             .pipe(autoprefixer({browsers: ['last 2 versions'], cascade:false}))
             .pipe(buildType === buildTypeEnum.prod ? minifyCss() : gutil.noop())
             .pipe(buildType === buildTypeEnum.prod ? rename({suffix: '.min'}) : gutil.noop())
-            .pipe(gulp.dest(buildTypeToDistDir(buildType)))
-            .pipe(livereload());
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
     }
 
     gulp.task('stageAppLess:dev', function () {
@@ -232,8 +231,7 @@ function buildTypeToDistDir(buildType) {
         ];
 
         return gulp.src(globs, {cwdbase: true})
-            .pipe(gulp.dest(buildTypeToDistDir(buildType)))
-            .pipe(livereload());
+            .pipe(gulp.dest(buildTypeToDistDir(buildType)));
     }
 
     gulp.task('stageAppResources:dev', function () {
@@ -246,18 +244,39 @@ function buildTypeToDistDir(buildType) {
 
 })();
 
+
 //
 // Stage app JavaScript
 //
 (function () {
     "use strict";
 
+    function getTemplateCacheStream() {
+        "use strict";
+        return gulp.src('www/js/**/*.tc.html')
+            .pipe(templateCache(
+                path.join('www', 'js', projectConfig.templateCache.jsFile),
+                {
+                    //root: 'js',
+                    module: projectConfig.templateCache.module,
+                    standalone: true,
+                    base: path.join(__dirname, 'www')       // Must be relative to index.html
+                }
+            ));
+    }
+
+
     function stageAppJs(buildType) {
-        var globs = [
-            'www/js/**/*.js',
-            '!www/js/**/*.spec.js'
-        ],
-            outputDir;
+        var outputDir,
+            jsSourcesStream,
+            templateCacheSourcesStream,
+            sourcesStream;
+
+        jsSourcesStream = gulp.src(
+            ['www/js/**/*.js', '!www/js/**/*.spec.js'],
+            {cwdbase: true});
+        templateCacheSourcesStream = getTemplateCacheStream();
+        sourcesStream = mergeStream(jsSourcesStream, templateCacheSourcesStream);
 
         // If doing a debug build, the output will be in the appropriate dist
         // dir as usual.  If we are doing a prod build, we need to specify the
@@ -270,12 +289,11 @@ function buildTypeToDistDir(buildType) {
 
         // todo: Copy original source files so the sourcemaps work.
 
-        return gulp.src(globs, {cwdbase: true})
+        return sourcesStream
             .pipe(buildType === buildTypeEnum.prod ?
                 uglifyJs('app.min.js', {outSourceMap: true}) :
                 gutil.noop())
-            .pipe(gulp.dest(outputDir))
-            .pipe(livereload());
+            .pipe(gulp.dest(outputDir));
     }
 
     gulp.task('stageAppJs:dev', function () {
@@ -378,7 +396,6 @@ gulp.task('watch', function (cb) {
         tasks = ['test:dev'],
         watcher;
 
-    livereload.listen();
     watcher = gulp.watch(globs, tasks);
 
     watcher.on('change', function (event) {
