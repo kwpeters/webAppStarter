@@ -13,7 +13,7 @@ var gulp = require('gulp'),
     minifyCss = require('gulp-minify-css'),
     templateCache = require('gulp-angular-templatecache'),
     uglifyJs = require('gulp-uglifyjs'),
-    rimraf = require('gulp-rimraf'),
+    del = require('del'),
     autoprefixer = require('gulp-autoprefixer'),
     karma = require('karma').server,
     karmaUtil = require('./test/unit/karmautil'),
@@ -349,7 +349,7 @@ function buildTypeToDistDir(buildType) {
 (function () {
     "use strict";
 
-    gulp.task('clean', function () {
+    gulp.task('clean', function (cb) {
         var globs = [
             'www/**/*.css',
             'www/bower_components',
@@ -357,8 +357,7 @@ function buildTypeToDistDir(buildType) {
             'artifacts/*'
         ];
 
-        return gulp.src(globs, {read: false})
-            .pipe(rimraf());
+        del(globs, cb);
     });
 })();
 

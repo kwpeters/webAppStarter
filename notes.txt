@@ -5,4 +5,4 @@ To Do:
     - Update version of Express
     - Build index.html
     - Don't use globbing patterns in karma configuration, because order matters.
-    - Remove rimraf from gulpfile.js
+    - Replace gulp-uglifyjs with gulp-uglify (now that gulp-sourcemaps works)
