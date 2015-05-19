@@ -3,20 +3,9 @@
 
 var gulp          = require('gulp'),
     gutil         = require('gulp-util'),
-    os            = require('os'),
     path          = require('path'),
     projectConfig = require('./projectConfig'),
     mergeStream   = require('merge-stream'),
-    rename        = require('gulp-rename'),
-    less          = require('gulp-less'),
-    minifyCss     = require('gulp-minify-css'),
-    templateCache = require('gulp-angular-templatecache'),
-    uglify        = require('gulp-uglify'),
-    sourcemaps    = require('gulp-sourcemaps'),
-    concat        = require('gulp-concat'),
-    del           = require('del'),
-    autoprefixer  = require('gulp-autoprefixer'),
-    karmaUtil     = require('./test/unit/karmautil'),
     buildTypeEnum = {dev: 'dev', prod: 'prod'};
 
 function buildTypeToDistDir(buildType) {
@@ -46,6 +35,8 @@ function buildTypeToDistDir(buildType) {
 ////////////////////////////////////////////////////////////////////////////////
 (function () {
     "use strict";
+
+    var os = require('os');
 
     gulp.task('usage', function () {
         var padding = os.EOL + os.EOL,
@@ -77,6 +68,7 @@ function buildTypeToDistDir(buildType) {
 
         console.log(padding + text.join(os.EOL) + padding);
     });
+
 })();
 
 
@@ -217,10 +209,13 @@ function buildTypeToDistDir(buildType) {
 (function () {
     "use strict";
 
-    var rootLessFile = 'www/styles/app.less';
+    var less         = require('gulp-less'),
+        autoprefixer = require('gulp-autoprefixer'),
+        minifyCss    = require('gulp-minify-css'),
+        rename       = require('gulp-rename');
 
     function stageAppLess(buildType) {
-        return gulp.src(rootLessFile, {cwdbase: true})
+        return gulp.src(projectConfig.firstPartyLessFiles, {cwdbase: true})
             .pipe(less({paths: [], relativeUrls: true}))
             .pipe(autoprefixer({browsers: ['last 2 versions'], cascade:false}))
             .pipe(buildType === buildTypeEnum.prod ? minifyCss() : gutil.noop())
@@ -274,6 +269,9 @@ function buildTypeToDistDir(buildType) {
     "use strict";
 
     function getTemplateCacheStream() {
+
+        var templateCache = require('gulp-angular-templatecache');
+
         return gulp.src('www/js/**/*.tc.html')
             .pipe(templateCache(
                 path.join('www', 'js', projectConfig.templateCache.jsFile),
@@ -283,12 +281,16 @@ function buildTypeToDistDir(buildType) {
                     standalone: true,
                     base: path.join(__dirname, 'www')       // Must be relative to index.html
                 }
-            ));
+            )
+        );
     }
 
 
     function stageAppJs(buildType) {
-        var outputDir,
+        var sourcemaps = require('gulp-sourcemaps'),
+            uglify     = require('gulp-uglify'),
+            concat     = require('gulp-concat'),
+            outputDir,
             jsSourcesStream,
             templateCacheSourcesStream,
             sourcesStream;
@@ -372,6 +374,8 @@ function buildTypeToDistDir(buildType) {
 (function () {
     "use strict";
 
+    var del = require('del');
+
     gulp.task('clean', function (cb) {
 
         var globs = [
@@ -407,7 +411,8 @@ function buildTypeToDistDir(buildType) {
 (function () {
     "use strict";
 
-    var karma = require('karma').server;
+    var karma     = require('karma').server,
+        karmaUtil = require('./test/unit/karmautil');
 
     gulp.task('test:dev', ['build:dev'], function (cb) {
         var karmaConfig = karmaUtil.getDevConfig('./', 'dist/dev/www');
