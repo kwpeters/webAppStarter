@@ -12,7 +12,9 @@ var gulp = require('gulp'),
     less = require('gulp-less'),
     minifyCss = require('gulp-minify-css'),
     templateCache = require('gulp-angular-templatecache'),
-    uglifyJs = require('gulp-uglifyjs'),
+    uglify = require('gulp-uglify'),
+    sourcemaps = require('gulp-sourcemaps'),
+    concat = require('gulp-concat'),
     del = require('del'),
     autoprefixer = require('gulp-autoprefixer'),
     karma = require('karma').server,
@@ -278,21 +280,23 @@ function buildTypeToDistDir(buildType) {
         templateCacheSourcesStream = getTemplateCacheStream();
         sourcesStream = mergeStream(jsSourcesStream, templateCacheSourcesStream);
 
-        // If doing a debug build, the output will be in the appropriate dist
-        // dir as usual.  If we are doing a prod build, we need to specify the
-        // entire output directory to trick uglifyJS into placing the map file
-        // in the appropriate directory and generating the correct final comment
-        // in the JS file.
-        outputDir = buildType === buildTypeEnum.dev ?
-            buildTypeToDistDir(buildType) :
-            buildTypeToDistDir(buildType) + '/www/js';
-
-        // todo: Copy original source files so the sourcemaps work.
+        if (buildType === buildTypeEnum.dev) {
+            // Nothing special needs to happen during dev builds.  The JS files
+            // are just copied to dist/dev, using their relative paths.
+            outputDir = buildTypeToDistDir(buildType);
+        } else {
+            // During concatenation for release builds, the relative paths of
+            // each individual file in the stream will be lost.  So we have to
+            // specify the full path of the directory where the concatenated JS
+            // file will be written.
+            outputDir = path.join(buildTypeToDistDir(buildType), 'www', 'js');
+        }
 
         return sourcesStream
-            .pipe(buildType === buildTypeEnum.prod ?
-                uglifyJs('app.min.js', {outSourceMap: true}) :
-                gutil.noop())
+            .pipe(sourcemaps.init())
+            .pipe(buildType === buildTypeEnum.prod ? uglify()                   : gutil.noop())
+            .pipe(buildType === buildTypeEnum.prod ? concat('app.min.js')       : gutil.noop())
+            .pipe(buildType === buildTypeEnum.prod ? sourcemaps.write('./maps') : gutil.noop())
             .pipe(gulp.dest(outputDir));
     }
 
