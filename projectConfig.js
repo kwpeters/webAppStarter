@@ -4,9 +4,15 @@ module.exports = (function () {
     var gutil         = require('gulp-util'),
         projectConfig = {};
 
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    // 3rd party files
+    //
+    ////////////////////////////////////////////////////////////////////////////
+
     projectConfig.thirdPartyCssFiles = {
         dev: [
-            'bower_components/bootstrap/dist/css/bootstrap.min.css'
+            'bower_components/bootstrap/dist/css/bootstrap.css'
         ],
         prod: [
             'bower_components/bootstrap/dist/css/bootstrap.min.css'
@@ -45,6 +51,26 @@ module.exports = (function () {
     projectConfig.firstPartyLessFiles = [
         'styles/app.less'
     ];
+
+    projectConfig.thirdPartyOtherFiles = {
+        dev: [
+            'bower_components/bootstrap/dist/css/bootstrap.css.map'
+        ],
+        prod: [
+            'bower_components/jquery/dist/jquery.min.map',
+            'bower_components/angular/angular.min.js.map',
+            'bower_components/angular-resource/angular-resource.min.js.map',
+            'bower_components/angular-cookies/angular-cookies.min.js.map',
+            'bower_components/angular-touch/angular-touch.min.js.map',
+            'bower_components/angular-animate/angular-animate.min.js.map'
+        ]
+    };
+
+    ////////////////////////////////////////////////////////////////////////////
+    //
+    // 1st party files
+    //
+    ////////////////////////////////////////////////////////////////////////////
 
     projectConfig.firstPartyLessFiles.asCssFiles = function (buildType) {
         var newExtension,

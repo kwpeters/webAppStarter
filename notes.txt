@@ -5,3 +5,4 @@ To Do:
     - Add server-side unit tests
     - Update version of Express
     - Replace Bower with NPM.
+    - Add an image (and support in build system).

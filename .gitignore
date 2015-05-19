@@ -4,8 +4,9 @@
 # IDE specific Files
 .idea
 
-# Server libraries
+# 3rd party libraries
 /node_modules/
+/bower_components/
 
 # Build generated files
 /dist/

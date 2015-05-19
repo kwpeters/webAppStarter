@@ -32,12 +32,14 @@ function getBaseConfig(pathToRoot, pathRootToWww) {
 
     // Add all 3rd party JS (including unit test-only files) and all 3rd parth CSS.
     projectConfig.thirdPartyJsFiles.dev
-        .concat(projectConfig.thirdPartyUnitTestJsFiles)
         .concat(projectConfig.thirdPartyCssFiles.dev)
         .forEach(function (curPath) {
             baseConfig.files.push(pathRootToWww + '/' + curPath);
         }
     );
+
+    // Use the unit-test-only files directly from the /bower_components folder.
+    baseConfig.files = baseConfig.files.concat(projectConfig.thirdPartyUnitTestJsFiles);
 
     // list of files to exclude
     baseConfig.exclude = [];

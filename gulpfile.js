@@ -7,7 +7,6 @@ var gulp          = require('gulp'),
     path          = require('path'),
     projectConfig = require('./projectConfig'),
     mergeStream   = require('merge-stream'),
-    bower         = require('gulp-bower'),
     rename        = require('gulp-rename'),
     less          = require('gulp-less'),
     minifyCss     = require('gulp-minify-css'),
@@ -144,14 +143,32 @@ function buildTypeToDistDir(buildType) {
 
 
 //
-// Stage Bower components
+// Stage Bower files
 //
 (function () {
     "use strict";
 
     function stageBowerFiles(buildType) {
-        var bowerDir = buildTypeToDistDir(buildType) + '/www/bower_components';
-        return bower(bowerDir);
+
+        var mergedStream = mergeStream(),
+            outputDir = buildTypeToDistDir(buildType) + '/www';
+
+        mergedStream.add(
+            gulp.src(projectConfig.thirdPartyCssFiles[buildType], {cwdbase: true})
+                .pipe(gulp.dest(outputDir))
+        );
+
+        mergedStream.add(
+            gulp.src(projectConfig.thirdPartyJsFiles[buildType], {cwdbase: true})
+                .pipe(gulp.dest(outputDir))
+        );
+
+        mergedStream.add(
+            gulp.src(projectConfig.thirdPartyOtherFiles[buildType], {cwdbase: true})
+                .pipe(gulp.dest(outputDir))
+        );
+
+        return mergedStream;
     }
 
     gulp.task('stageBowerFiles:dev', function () {
@@ -361,13 +378,23 @@ function buildTypeToDistDir(buildType) {
 
         var globs = [
             'www/**/*.css',
-            'www/bower_components',
             'dist',
             'artifacts/*'
         ];
 
         del(globs, cb);
     });
+
+    gulp.task('clean:all', ['clean'], function (cb) {
+
+        var globs = [
+            'bower_components',
+            'node_modules'
+        ];
+
+        del(globs, cb);
+    });
+
 })();
 
 
