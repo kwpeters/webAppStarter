@@ -22,7 +22,7 @@ module.exports = (function () {
             'bower_components/angular-cookies/angular-cookies.js',
             'bower_components/angular-touch/angular-touch.js',
             'bower_components/angular-animate/angular-animate.js',
-            'bower_components/angular-local-storage/angular-local-storage.js',
+            'bower_components/angular-local-storage/dist/angular-local-storage.js',
             'bower_components/bootstrap/dist/js/bootstrap.js'
             ],
         prod: [
@@ -33,7 +33,7 @@ module.exports = (function () {
             'bower_components/angular-cookies/angular-cookies.min.js',
             'bower_components/angular-touch/angular-touch.min.js',
             'bower_components/angular-animate/angular-animate.min.js',
-            'bower_components/angular-local-storage/angular-local-storage.min.js',
+            'bower_components/angular-local-storage/dist/angular-local-storage.min.js',
             'bower_components/bootstrap/dist/js/bootstrap.min.js'
         ]
     };

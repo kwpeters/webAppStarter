@@ -358,6 +358,7 @@ function buildTypeToDistDir(buildType) {
     "use strict";
 
     gulp.task('clean', function (cb) {
+
         var globs = [
             'www/**/*.css',
             'www/bower_components',
