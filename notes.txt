@@ -1,8 +1,8 @@
 To Do:
 --------------------------------------------------------------------------------
+    - Add an image (and support in build system).
     - Add ngAnnotate
     - Add server-side unit tests
     - Update version of Express
     - Replace Bower with NPM.
-    - Add an image (and support in build system).
     - Test gulpfile.js's use of path.join() on PC.
