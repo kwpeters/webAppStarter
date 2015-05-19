@@ -5,3 +5,4 @@ To Do:
     - Update version of Express
     - Replace Bower with NPM.
     - Add an image (and support in build system).
+    - Test gulpfile.js's use of path.join() on PC.
