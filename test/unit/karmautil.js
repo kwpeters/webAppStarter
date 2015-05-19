@@ -7,7 +7,7 @@
 
 /* global module */
 /* global require */
-
+var projectConfig = require('../../projectConfig');
 
 module.exports = {};
 
@@ -29,24 +29,15 @@ function getBaseConfig(pathToRoot, pathRootToWww) {
 
     // List of files/patterns to load in the browser
     baseConfig.files = [];
-    [
-        // 3rd party JS
-        'bower_components/jquery/dist/jquery.min.js',
-        'bower_components/angular/angular.min.js',
-        'bower_components/angular-mocks/angular-mocks.js',
-        'bower_components/angular-ui-router/release/angular-ui-router.min.js',
-        'bower_components/angular-resource/angular-resource.min.js',
-        'bower_components/angular-cookies/angular-cookies.min.js',
-        'bower_components/angular-touch/angular-touch.min.js',
-        'bower_components/angular-animate/angular-animate.min.js',
-        'bower_components/angular-local-storage/angular-local-storage.min.js',
-        'bower_components/bootstrap/dist/js/bootstrap.min.js',
 
-        // 3rd party CSS
-        'bower_components/bootstrap/dist/css/bootstrap.min.css'
-    ].forEach(function (curPath) {
+    // Add all 3rd party JS (including unit test-only files) and all 3rd parth CSS.
+    projectConfig.thirdPartyJsFiles.dev
+        .concat(projectConfig.thirdPartyUnitTestJsFiles)
+        .concat(projectConfig.thirdPartyCssFiles.dev)
+        .forEach(function (curPath) {
             baseConfig.files.push(pathRootToWww + '/' + curPath);
-    });
+        }
+    );
 
     // list of files to exclude
     baseConfig.exclude = [];
@@ -114,12 +105,13 @@ module.exports.getDevConfig = function getDevConfig (pathToRoot, pathRootToWww) 
     //
 
     // Files under test
-    [
-        'styles/app.css',
-        'js/**/*.js'
-    ].forEach(function (curPath) {
-        config.files.push(pathRootToWww + '/' + curPath);
-    });
+
+    projectConfig.firstPartyLessFiles.asCssFiles('dev')
+        .concat(projectConfig.firstPartyJsFiles.dev)
+        .forEach(function (curPath) {
+            config.files.push(pathRootToWww + '/' + curPath);
+        }
+    );
 
     // Test files
     // The path to the test files will not necessarily be in the www folder

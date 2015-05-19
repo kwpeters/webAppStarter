@@ -1,7 +1,8 @@
 To Do:
 --------------------------------------------------------------------------------
+    - Don't stage everything Bower downloads, only the needed files.
+    - Add ngAnnotate
     - Add server-side unit tests
     - Update version of AngularJS
     - Update version of Express
-    - Don't use globbing patterns in karma configuration, because order matters.
     - Replace Bower with NPM.
