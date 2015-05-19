@@ -7,9 +7,6 @@
 # Server libraries
 /node_modules/
 
-# Front end libraries
-/www/bower_components/
-
 # Build generated files
 /dist/
 /artifacts/
