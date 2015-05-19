@@ -308,7 +308,7 @@ function buildTypeToDistDir(buildType) {
             // each individual file in the stream will be lost.  So we have to
             // specify the full path of the directory where the concatenated JS
             // file will be written.
-            outputDir = path.join(buildTypeToDistDir(buildType), 'www', 'js');
+            outputDir = buildTypeToDistDir(buildType) + '/www/js';
         }
 
         return sourcesStream
