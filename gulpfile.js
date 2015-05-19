@@ -16,7 +16,6 @@ var gulp          = require('gulp'),
     concat        = require('gulp-concat'),
     del           = require('del'),
     autoprefixer  = require('gulp-autoprefixer'),
-    karma         = require('karma').server,
     karmaUtil     = require('./test/unit/karmautil'),
     buildTypeEnum = {dev: 'dev', prod: 'prod'};
 
@@ -31,11 +30,6 @@ function buildTypeToDistDir(buildType) {
         gutil.log(gutil.colors.red('Invalid build type!'));
     }
 }
-
-
-// todo: add running jshint (with coverage)
-
-// todo: add running unit tests
 
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -67,7 +61,11 @@ function buildTypeToDistDir(buildType) {
                 "    Runs the Node.js/Express web server",
                 "",
                 gutil.colors.cyan("gulp clean"),
+                gutil.colors.cyan("gulp clean:all"),
                 "    Deletes build-generated files",
+                "",
+                gutil.colors.cyan("gulp jshint"),
+                "    Performs static analysis on files",
                 "",
                 gutil.colors.cyan("gulp usage"),
                 "    Displays this usage information",
@@ -406,37 +404,90 @@ function buildTypeToDistDir(buildType) {
 // invoke the shell command to run Karma.  In the future, if more flexibility
 // is needed, we can start running Karma using the Karma API as shown here:
 // https://github.com/karma-runner/gulp-karma
-
-gulp.task('test:dev', ['build:dev'], function (cb) {
+(function () {
     "use strict";
 
-    var karmaConfig = karmaUtil.getDevConfig('./', 'dist/dev/www');
-    karma.start(karmaConfig, cb);
-});
+    var karma = require('karma').server;
+
+    gulp.task('test:dev', ['build:dev'], function (cb) {
+        var karmaConfig = karmaUtil.getDevConfig('./', 'dist/dev/www');
+        karma.start(karmaConfig, cb);
+    });
+
+})();
+
+
+////////////////////////////////////////////////////////////////////////////////
+// Static Analysis - JSHint
+////////////////////////////////////////////////////////////////////////////////
+(function () {
+    "use strict";
+
+    var jshint      = require('gulp-jshint'),
+        gulpHelpers = require('./nodeUtil/gulpHelpers');
+
+    /**
+     * Helper function that runs JSHint.
+     * @param {boolean} ignoreErrors - true if errors should be ignored and the
+     *     task should always succeed.  false if errors should cause the task to
+     *     fail.
+     * @returns {stream} The stream that runs JS files through JSHint.
+     */
+    function runJsHint(ignoreErrors) {
+        return gulp
+            .src(
+            [
+                'gulpfile.js',
+                'nodeUtil/**/*.js',
+                'www/**/*.js',          // All production JS files and all tests
+                'test/unit/**/*.js'     // Unit test configuration files
+            ], {base: '.'})
+            .pipe(jshint())
+            .pipe(gulpHelpers.createJsHintReporterConsole())
+            .pipe(gulpHelpers.createJsHintReporterFile('artifacts/jshint_output.txt'))
+            .pipe(gulpHelpers.jshintCheckstyleXmlReport('artifacts/jshint_output.xml'))
+            .pipe(ignoreErrors ? gutil.noop() : jshint.reporter('fail'));
+    }
+
+    gulp.task('jshint', [], function () {
+        return runJsHint(false);
+    });
+
+    gulp.task('jshint:ignoreErrors', [], function () {
+        return runJsHint(true);
+    });
+
+})();
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // Watchers
 ////////////////////////////////////////////////////////////////////////////////
 
-gulp.task('watch', function (cb) {
+(function () {
     "use strict";
 
-    var globs = [
-            'www/js/**/*.js',
-            'www/styles/*.less',
-            'www/js/**/*.less',
-            'www/**/*.html'
-        ],
-        tasks = ['test:dev'],
-        watcher;
+    var tasks = ['jshint:ignoreErrors', 'test:dev'];
 
-    watcher = gulp.watch(globs, tasks);
+    gulp.task('watch', tasks, function (cb) {
 
-    watcher.on('change', function (event) {
-        gutil.log('');
-        gutil.log('================================================================================');
-        gutil.log('File ' + event.path + ' was ' + event.type + '.  Rebuilding...');
+        var globs = [
+                'www/js/**/*.js',
+                'www/styles/*.less',
+                'www/js/**/*.less',
+                'www/**/*.html'
+            ],
+            watcher;
+
+        watcher = gulp.watch(globs, tasks);
+
+        watcher.on('change', function (event) {
+            gutil.log('');
+            gutil.log('================================================================================');
+            gutil.log('File ' + event.path + ' was ' + event.type + '.  Rebuilding...');
+        });
     });
+})();
 
-});
+
+
