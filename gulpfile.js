@@ -172,12 +172,17 @@ function buildTypeToDistDir(buildType) {
     "use strict";
 
     function stageIndex(buildType) {
-        var indexFileName = 'www/index-' + buildType + '.html';
 
-        return gulp.src(indexFileName, {cwdbase: true})
-            .pipe(rename({basename: 'index'}))
+        var htmlReplace = require('gulp-html-replace');
+
+        return gulp.src('www/index.html', {cwdbase: true})
+            .pipe(htmlReplace({
+                thirdPartyCss: projectConfig.thirdPartyCssFiles[buildType],
+                thirdPartyJs: projectConfig.thirdPartyJsFiles[buildType],
+                firstPartyCss: projectConfig.firstPartyLessFiles.asCssFiles(buildType),
+                firstPartyJs: projectConfig.firstPartyJsFiles[buildType]
+            }))
             .pipe(gulp.dest(buildTypeToDistDir(buildType)));
-
     }
 
     gulp.task('stageIndex:dev', function () {
@@ -254,7 +259,6 @@ function buildTypeToDistDir(buildType) {
     "use strict";
 
     function getTemplateCacheStream() {
-        "use strict";
         return gulp.src('www/js/**/*.tc.html')
             .pipe(templateCache(
                 path.join('www', 'js', projectConfig.templateCache.jsFile),
