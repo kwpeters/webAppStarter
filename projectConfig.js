@@ -48,10 +48,6 @@ module.exports = (function () {
         'bower_components/angular-mocks/angular-mocks.js'
     ];
 
-    projectConfig.firstPartyLessFiles = [
-        'styles/app.less'
-    ];
-
     projectConfig.thirdPartyOtherFiles = {
         dev: [
             'bower_components/bootstrap/dist/css/bootstrap.css.map'
@@ -71,6 +67,10 @@ module.exports = (function () {
     // 1st party files
     //
     ////////////////////////////////////////////////////////////////////////////
+
+    projectConfig.firstPartyLessFiles = [
+        'styles/app.less'
+    ];
 
     projectConfig.firstPartyLessFiles.asCssFiles = function (buildType) {
         var newExtension,

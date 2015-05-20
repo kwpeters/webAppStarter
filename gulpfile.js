@@ -215,7 +215,13 @@ function buildTypeToDistDir(buildType) {
         rename       = require('gulp-rename');
 
     function stageAppLess(buildType) {
-        return gulp.src(projectConfig.firstPartyLessFiles, {cwdbase: true})
+
+        var lessFilesFullPath = [];
+        projectConfig.firstPartyLessFiles.forEach(function (curFile) {
+            lessFilesFullPath.push('www/' + curFile);
+        });
+
+        return gulp.src(lessFilesFullPath, {cwdbase: true})
             .pipe(less({paths: [], relativeUrls: true}))
             .pipe(autoprefixer({browsers: ['last 2 versions'], cascade:false}))
             .pipe(buildType === buildTypeEnum.prod ? minifyCss() : gutil.noop())
@@ -287,19 +293,23 @@ function buildTypeToDistDir(buildType) {
 
 
     function stageAppJs(buildType) {
-        var sourcemaps = require('gulp-sourcemaps'),
-            uglify     = require('gulp-uglify'),
-            concat     = require('gulp-concat'),
-            outputDir,
-            jsSourcesStream,
-            templateCacheSourcesStream,
-            sourcesStream;
+        var sourcemaps        = require('gulp-sourcemaps'),
+            uglify            = require('gulp-uglify'),
+            concat            = require('gulp-concat'),
+            jsSourcesFullPath = [],
+            sourcesStream     = mergeStream(),
+            concatOutputFile  = path.basename(projectConfig.firstPartyJsFiles.prod[0]),
+            outputDir;
 
-        jsSourcesStream = gulp.src(
-            ['www/js/**/*.js', '!www/js/**/*.spec.js'],
-            {cwdbase: true});
-        templateCacheSourcesStream = getTemplateCacheStream();
-        sourcesStream = mergeStream(jsSourcesStream, templateCacheSourcesStream);
+        projectConfig.firstPartyJsFiles.dev.forEach(function (curFile) {
+            jsSourcesFullPath.push('www/' + curFile);
+        });
+
+        // Add the JS sources.
+        sourcesStream.add(gulp.src(jsSourcesFullPath, {cwdbase: true}));
+
+        // Add the JS source that is generated in order to populate the template cache.
+        sourcesStream.add(getTemplateCacheStream());
 
         if (buildType === buildTypeEnum.dev) {
             // Nothing special needs to happen during dev builds.  The JS files
@@ -316,7 +326,7 @@ function buildTypeToDistDir(buildType) {
         return sourcesStream
             .pipe(sourcemaps.init())
             .pipe(buildType === buildTypeEnum.prod ? uglify()                   : gutil.noop())
-            .pipe(buildType === buildTypeEnum.prod ? concat('app.min.js')       : gutil.noop())
+            .pipe(buildType === buildTypeEnum.prod ? concat(concatOutputFile)   : gutil.noop())
             .pipe(buildType === buildTypeEnum.prod ? sourcemaps.write('./maps') : gutil.noop())
             .pipe(gulp.dest(outputDir));
     }
