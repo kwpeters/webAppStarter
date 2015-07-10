@@ -90,12 +90,11 @@ module.exports = (function () {
     };
     
     projectConfig.buildInputJsFiles = [
-        'js/templateCache.js',
         'js/views/homeView.js',
         'js/app.js'];
 
     projectConfig.buildOutputJsFiles = {
-        dev: projectConfig.buildInputJsFiles,
+        dev: projectConfig.buildInputJsFiles.concat(['js/templateCache.js']),
         prod: ['js/app.min.js']
     };
 
