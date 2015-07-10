@@ -133,7 +133,7 @@ function buildTypeToDistDir(buildType) {
 
 
 //
-// Stage Bower files
+// Stage all 3rd party front end files (Bower files)
 //
 (function () {
     "use strict";
@@ -246,12 +246,7 @@ function buildTypeToDistDir(buildType) {
     "use strict";
 
     function stageAppResources(buildType) {
-        var globs = [
-            'www/fonts/**/*',
-            'www/images/**/*',
-            'www/js/**/*.html',
-            '!www/js/**/*.tc.html' // Don't include templates that are placed in the template cache
-        ];
+        var globs = projectConfig.firstPartyResourceFiles;;
 
         return gulp.src(globs, {cwdbase: true})
             .pipe(gulp.dest(buildTypeToDistDir(buildType)));

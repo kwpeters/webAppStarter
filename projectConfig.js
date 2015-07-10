@@ -100,6 +100,13 @@ module.exports = (function () {
         ]
     };
 
+    projectConfig.firstPartyResourceFiles = [
+        'www/fonts/**/*',
+        'www/images/**/*',
+        'www/js/**/*.html',
+        '!www/js/**/*.tc.html' // Don't include templates that are placed in the template cache
+    ];
+
     projectConfig.templateCache = {
         jsFile: 'templateCache.js',
         module: 'templateCacheModule'
