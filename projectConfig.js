@@ -88,16 +88,15 @@ module.exports = (function () {
 
         return cssFiles;
     };
+    
+    projectConfig.buildInputJsFiles = [
+        'js/templateCache.js',
+        'js/views/homeView.js',
+        'js/app.js'];
 
-    projectConfig.firstPartyJsFiles = {
-        dev: [
-            'js/templateCache.js',
-            'js/views/homeView.js',
-            'js/app.js'
-        ],
-        prod: [
-            'js/app.min.js'
-        ]
+    projectConfig.buildOutputJsFiles = {
+        dev: projectConfig.buildInputJsFiles,
+        prod: ['js/app.min.js']
     };
 
     projectConfig.firstPartyResourceFiles = [
