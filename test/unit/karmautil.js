@@ -109,7 +109,7 @@ module.exports.getDevConfig = function getDevConfig (pathToRoot, pathRootToWww) 
     // Files under test
 
     projectConfig.firstPartyLessFiles.asCssFiles('dev')
-        .concat(projectConfig.firstPartyJsFiles.dev)
+        .concat(projectConfig.buildInputJsFiles)
         .forEach(function (curPath) {
             config.files.push(pathRootToWww + '/' + curPath);
         }
