@@ -2,6 +2,7 @@ module.exports = (function () {
     "use strict";
 
     var gutil         = require('gulp-util'),
+        path          = require('path'),
         projectConfig = {};
 
     ////////////////////////////////////////////////////////////////////////////
@@ -93,9 +94,15 @@ module.exports = (function () {
         'js/views/homeView.js',
         'js/app.js'];
 
-    projectConfig.buildOutputJsFiles = {
-        dev: projectConfig.buildInputJsFiles.concat(['js/templateCache.js']),
-        prod: ['js/app.min.js']
+    projectConfig.getBuildOutputJsFiles = function getBuildOutputJsFiles(buildType) {
+
+        if (buildType === 'prod') {
+            return 'js/app.min.js';
+        }
+
+        return projectConfig.buildInputJsFiles.concat(
+            [path.join('js', projectConfig.templateCache.jsFile)]
+        );
     };
 
     projectConfig.firstPartyResourceFiles = [

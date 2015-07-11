@@ -187,7 +187,7 @@ function buildTypeToDistDir(buildType) {
                 thirdPartyCss: projectConfig.thirdPartyCssFiles[buildType],
                 thirdPartyJs: projectConfig.thirdPartyJsFiles[buildType],
                 firstPartyCss: projectConfig.firstPartyLessFiles.asCssFiles(buildType),
-                firstPartyJs: projectConfig.buildOutputJsFiles[buildType]
+                firstPartyJs: projectConfig.getBuildOutputJsFiles(buildType)
             }))
             .pipe(gulp.dest(buildTypeToDistDir(buildType)));
     }
@@ -293,7 +293,7 @@ function buildTypeToDistDir(buildType) {
             concat            = require('gulp-concat'),
             jsSourcesFullPath = [],
             sourcesStream     = mergeStream(),
-            concatOutputFile  = path.basename(projectConfig.buildOutputJsFiles.prod[0]),
+            concatOutputFile  = path.basename(projectConfig.getBuildOutputJsFiles(buildTypeEnum.prod)[0]),
             outputDir;
 
         projectConfig.buildInputJsFiles.forEach(function (curFile) {
