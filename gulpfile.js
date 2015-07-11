@@ -246,7 +246,7 @@ function buildTypeToDistDir(buildType) {
     "use strict";
 
     function stageAppResources(buildType) {
-        var globs = projectConfig.firstPartyResourceFiles;;
+        var globs = projectConfig.firstPartyResourceFiles;
 
         return gulp.src(globs, {cwdbase: true})
             .pipe(gulp.dest(buildTypeToDistDir(buildType)));
@@ -292,7 +292,6 @@ function buildTypeToDistDir(buildType) {
             ts                = require('gulp-typescript'),
             uglify            = require('gulp-uglify'),
             concat            = require('gulp-concat'),
-            sourcesStream     = mergeStream(),
             concatOutputFile  = path.basename(projectConfig.getBuildOutputJsFiles(buildTypeEnum.prod)[0]),
             tsResult,
             tsSourcesExtPath,
@@ -491,12 +490,18 @@ function buildTypeToDistDir(buildType) {
 (function () {
     "use strict";
 
-    var tasks = ['jshint:ignoreErrors', 'test:dev'];
+    var tasks        = ['jshint:ignoreErrors', 'test:dev'],
+        onWatchEvent = function onWatchEvent(event) {
+            gutil.log('');
+            gutil.log('================================================================================');
+            gutil.log('File ' + event.path + ' was ' + event.type + '.  Rebuilding...');
+        };
 
-    gulp.task('watch', tasks, function (cb) {
+    gulp.task('watch', tasks, function () {
 
         var globs = [
                 'www/js/**/*.js',
+                'www/js/**/*.ts',
                 'www/styles/*.less',
                 'www/js/**/*.less',
                 'www/**/*.html'
@@ -504,14 +509,7 @@ function buildTypeToDistDir(buildType) {
             watcher;
 
         watcher = gulp.watch(globs, tasks);
-
-        watcher.on('change', function (event) {
-            gutil.log('');
-            gutil.log('================================================================================');
-            gutil.log('File ' + event.path + ' was ' + event.type + '.  Rebuilding...');
-        });
+        watcher.on('change', onWatchEvent);
+        return watcher;
     });
 })();
-
-
-
