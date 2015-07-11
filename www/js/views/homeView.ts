@@ -1,4 +1,4 @@
-/* global angular */
+///<reference path="../../../typings/tsd.d.ts"/>
 
 angular.module('homeViewModule', [])
     .controller(

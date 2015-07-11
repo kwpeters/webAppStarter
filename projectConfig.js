@@ -90,19 +90,29 @@ module.exports = (function () {
         return cssFiles;
     };
     
-    projectConfig.buildInputJsFiles = [
-        'js/views/homeView.js',
-        'js/app.js'];
+    projectConfig.buildInputTsFiles = [
+        'js/views/homeView.ts',
+        'js/app.ts'];
 
     projectConfig.getBuildOutputJsFiles = function getBuildOutputJsFiles(buildType) {
+        var outputJs;
 
         if (buildType === 'prod') {
-            return 'js/app.min.js';
-        }
+            return ['js/app.min.js'];
+        } else {
 
-        return projectConfig.buildInputJsFiles.concat(
-            [path.join('js', projectConfig.templateCache.jsFile)]
-        );
+            // buildType === 'dev'
+
+            // Map each .ts file to its corresponding .js output file.
+            outputJs = projectConfig.buildInputTsFiles.map(function (curTsFile) {
+                return gutil.replaceExtension(curTsFile, '.js');
+            });
+
+            // Add the template cache JS file onto the end of the list.
+            outputJs.push(path.join('js', projectConfig.templateCache.jsFile));
+
+            return outputJs;
+        }
     };
 
     projectConfig.firstPartyResourceFiles = [

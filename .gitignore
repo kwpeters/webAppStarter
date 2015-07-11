@@ -7,6 +7,7 @@
 # 3rd party libraries
 /node_modules/
 /bower_components/
+/typings/
 
 # Build generated files
 /dist/

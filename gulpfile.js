@@ -289,22 +289,33 @@ function buildTypeToDistDir(buildType) {
 
     function stageAppJs(buildType) {
         var sourcemaps        = require('gulp-sourcemaps'),
+            ts                = require('gulp-typescript'),
             uglify            = require('gulp-uglify'),
             concat            = require('gulp-concat'),
-            jsSourcesFullPath = [],
             sourcesStream     = mergeStream(),
             concatOutputFile  = path.basename(projectConfig.getBuildOutputJsFiles(buildTypeEnum.prod)[0]),
+            tsResult,
+            tsSourcesExtPath,
             outputDir;
 
-        projectConfig.buildInputJsFiles.forEach(function (curFile) {
-            jsSourcesFullPath.push('www/' + curFile);
+        tsSourcesExtPath = projectConfig.buildInputTsFiles.map(function (curInputJsFile) {
+            return 'www/' + curInputJsFile;
         });
 
-        // Add the JS sources.
-        sourcesStream.add(gulp.src(jsSourcesFullPath, {cwdbase: true}));
+        tsResult = gulp.src(tsSourcesExtPath, {cwdbase: true})
+            .pipe(sourcemaps.init())
+            .pipe(ts({
+                target:            'ES5',
+                declarationFiles:  true,
+                noExternalResolve: false
+            }));
 
-        // Add the JS source that is generated in order to populate the template cache.
-        sourcesStream.add(getTemplateCacheStream());
+        // Combine the compiled TS output with the JS that is generated in order to
+        // populate the template cache.
+        var jsStream = mergeStream(
+            tsResult.js,
+            getTemplateCacheStream()
+        );
 
         if (buildType === buildTypeEnum.dev) {
             // Nothing special needs to happen during dev builds.  The JS files
@@ -318,12 +329,15 @@ function buildTypeToDistDir(buildType) {
             outputDir = buildTypeToDistDir(buildType) + '/www/js';
         }
 
-        return sourcesStream
-            .pipe(sourcemaps.init())
+        jsStream = jsStream
             .pipe(buildType === buildTypeEnum.prod ? uglify()                   : gutil.noop())
             .pipe(buildType === buildTypeEnum.prod ? concat(concatOutputFile)   : gutil.noop())
             .pipe(buildType === buildTypeEnum.prod ? sourcemaps.write('./maps') : gutil.noop())
             .pipe(gulp.dest(outputDir));
+
+        return mergeStream(
+            jsStream,
+            tsResult.dts.pipe(gulp.dest(buildTypeToDistDir(buildType) + '/definitions')));
     }
 
     gulp.task('stageAppJs:dev', function () {

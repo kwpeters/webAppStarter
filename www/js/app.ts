@@ -1,8 +1,6 @@
-// Application-specific JavaScript.
+///<reference path="../../typings/tsd.d.ts"/>
 
 /* App Module */
-
-/* global angular */
 
 angular.module(
     'appModule',
