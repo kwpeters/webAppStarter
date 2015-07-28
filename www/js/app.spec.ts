@@ -1,6 +1,4 @@
-/* global describe */
-/* global it */
-/* global jasmine */
+///<reference path="../../typings/tsd.d.ts"/>
 
 describe('Test to print out jasmine version that comes bundled with karam-jasmine', function() {
     "use strict";

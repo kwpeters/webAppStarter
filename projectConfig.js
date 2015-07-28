@@ -3,6 +3,7 @@ module.exports = (function () {
 
     var gutil         = require('gulp-util'),
         path          = require('path'),
+        glob          = require('glob'),
         projectConfig = {};
 
     ////////////////////////////////////////////////////////////////////////////
@@ -69,13 +70,15 @@ module.exports = (function () {
     //
     ////////////////////////////////////////////////////////////////////////////
 
+    //
+    // LESS
+    //
     projectConfig.firstPartyLessFiles = [
         'styles/app.less'
     ];
 
     projectConfig.firstPartyLessFiles.asCssFiles = function (buildType) {
-        var newExtension,
-            cssFiles = [];
+        var newExtension;
 
         if (buildType === 'dev') {
             newExtension = '.css';
@@ -83,13 +86,14 @@ module.exports = (function () {
             newExtension = '.min.css';
         }
 
-        projectConfig.firstPartyLessFiles.forEach(function (curLessFile) {
-            cssFiles.push(gutil.replaceExtension(curLessFile, newExtension));
+        return projectConfig.firstPartyLessFiles.map(function (curLessFile) {
+            return gutil.replaceExtension(curLessFile, newExtension);
         });
-
-        return cssFiles;
     };
-    
+
+    //
+    // TypeScript
+    //
     projectConfig.buildInputTsFiles = [
         'js/views/homeView.ts',
         'js/app.ts'];
@@ -115,6 +119,9 @@ module.exports = (function () {
         }
     };
 
+    //
+    // Resources
+    //
     projectConfig.firstPartyResourceFiles = [
         'www/fonts/**/*',
         'www/images/**/*',
@@ -122,9 +129,31 @@ module.exports = (function () {
         '!www/js/**/*.tc.html' // Don't include templates that are placed in the template cache
     ];
 
+    //
+    // Template Cache
+    //
     projectConfig.templateCache = {
         jsFile: 'templateCache.js',
         module: 'templateCacheModule'
+    };
+
+    //
+    // Unit test
+    //
+    projectConfig.unitTest = {};
+    projectConfig.unitTest.getTsFiles = function getInputTsFiles() {
+        return glob.sync('www/js/**/*.spec.ts');
+    };
+    projectConfig.unitTest.getBuildDir = function getBuildDir() {
+        return 'build/unittest';
+    };
+    projectConfig.unitTest.getJsFiles = function getJsFiles() {
+        var buildDir = projectConfig.unitTest.getBuildDir();
+
+        return projectConfig.unitTest.getTsFiles().map(function (curTsFile) {
+            var jsFile = gutil.replaceExtension(curTsFile, '.js');
+            return path.join(buildDir, jsFile);
+        });
     };
 
     return projectConfig;

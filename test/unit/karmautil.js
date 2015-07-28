@@ -119,7 +119,7 @@ module.exports.getDevConfig = function getDevConfig (pathToRoot, pathRootToWww) 
     // specified by the caller (i.e. dist/dev/www), because the test files
     // are not staged to dist when the project builds.  Instead, always use
     // the test files from their source directory.
-    config.files = config.files.concat(['www/js/**/*.spec.js']);
+    config.files = config.files.concat(projectConfig.unitTest.getJsFiles());
 
     //
     // preprocessors

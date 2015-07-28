@@ -1,8 +1,4 @@
-/* global describe */
-/* global beforeEach */
-/* global inject */
-/* global it */
-/* global expect */
+///<reference path="../../../typings/tsd.d.ts"/>
 
 describe('homeViewCtrl', function () {
     "use strict";

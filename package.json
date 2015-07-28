@@ -13,6 +13,7 @@
   "devDependencies": {
     "chalk": "^1.0.0",
     "del": "^1.1.1",
+    "glob": "^5.0.14",
     "gulp": "^3.8.7",
     "gulp-angular-templatecache": "^1.5.0",
     "gulp-autoprefixer": "^1.0.1",

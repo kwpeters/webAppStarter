@@ -399,7 +399,8 @@ function buildTypeToDistDir(buildType) {
         var globs = [
             'www/**/*.css',
             'dist',
-            'artifacts/*'
+            'artifacts/*',
+            'build'
         ];
 
         del(globs, cb);
@@ -429,11 +430,27 @@ function buildTypeToDistDir(buildType) {
 (function () {
     "use strict";
 
-    var karma     = require('karma').server,
-        karmaUtil = require('./test/unit/karmautil');
 
-    gulp.task('test:dev', ['build:dev'], function (cb) {
-        var karmaConfig = karmaUtil.getDevConfig('./', 'dist/dev/www');
+    gulp.task('_compileTests', function () {
+        var ts = require('gulp-typescript'),
+            sourcemaps = require('gulp-sourcemaps'),
+            tsResult;
+
+        tsResult = gulp.src(projectConfig.unitTest.getTsFiles(), {cwdbase: true})
+            .pipe(sourcemaps.init())
+            .pipe(ts({target: 'ES5', declarationFiles: true, noExternalResolve: false}))
+            .pipe(sourcemaps.write())
+            .pipe(gulp.dest(projectConfig.unitTest.getBuildDir()));
+
+        return tsResult.js;
+    });
+
+
+    gulp.task('test:dev', ['build:dev', '_compileTests'], function (cb) {
+        var karma       = require('karma').server,
+            karmaUtil   = require('./test/unit/karmautil'),
+            karmaConfig = karmaUtil.getDevConfig('./', 'dist/dev/www');
+
         karma.start(karmaConfig, cb);
     });
 
@@ -500,6 +517,7 @@ function buildTypeToDistDir(buildType) {
     gulp.task('watch', tasks, function () {
 
         var globs = [
+                'gulpfile.js',
                 'www/js/**/*.js',
                 'www/js/**/*.ts',
                 'www/styles/*.less',
