@@ -436,11 +436,11 @@ function buildTypeToDistDir(buildType) {
             sourcemaps = require('gulp-sourcemaps'),
             tsResult;
 
-        tsResult = gulp.src(projectConfig.unitTest.getTsFiles(), {cwdbase: true})
+        tsResult = gulp.src(projectConfig.clientUnitTest.getTsFiles(), {cwdbase: true})
             .pipe(sourcemaps.init())
             .pipe(ts({target: 'ES5', declarationFiles: true, noExternalResolve: false}))
             .pipe(sourcemaps.write())
-            .pipe(gulp.dest(projectConfig.unitTest.getBuildDir()));
+            .pipe(gulp.dest(projectConfig.clientUnitTest.getBuildDir()));
 
         return tsResult.js;
     });

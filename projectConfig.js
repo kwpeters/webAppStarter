@@ -138,19 +138,19 @@ module.exports = (function () {
     };
 
     //
-    // Unit test
+    // Client unit tests
     //
-    projectConfig.unitTest = {};
-    projectConfig.unitTest.getTsFiles = function getInputTsFiles() {
+    projectConfig.clientUnitTest = {};
+    projectConfig.clientUnitTest.getTsFiles = function getInputTsFiles() {
         return glob.sync('www/js/**/*.spec.ts');
     };
-    projectConfig.unitTest.getBuildDir = function getBuildDir() {
-        return 'build/unittest';
+    projectConfig.clientUnitTest.getBuildDir = function getBuildDir() {
+        return 'build/client-unittest';
     };
-    projectConfig.unitTest.getJsFiles = function getJsFiles() {
-        var buildDir = projectConfig.unitTest.getBuildDir();
+    projectConfig.clientUnitTest.getJsFiles = function getJsFiles() {
+        var buildDir = projectConfig.clientUnitTest.getBuildDir();
 
-        return projectConfig.unitTest.getTsFiles().map(function (curTsFile) {
+        return projectConfig.clientUnitTest.getTsFiles().map(function (curTsFile) {
             var jsFile = gutil.replaceExtension(curTsFile, '.js');
             return path.join(buildDir, jsFile);
         });
